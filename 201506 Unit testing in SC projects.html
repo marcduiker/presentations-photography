@@ -15,7 +15,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 		<link rel="icon" type="image/ico" href="favicon.ico">
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/sugnl.css" id="theme">
+		<link rel="stylesheet" href="css/theme/tahzoo.css" id="theme">
 
 		<!-- Code syntax highlighting -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -40,26 +40,33 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 				<section>
-					<h1>Unit testing in Sitecore projects</h1>
-					<p>Marc Duiker</p>
-					<img data-src="201506_Unittesting/img/sc_mpv_tech_180.jpg" height="130px" alt="Technical MVP logo" />
+					<section data-background="#DDDDDD">
+						<h1>Unit testing in Sitecore projects</h1>
+						<p>Marc Duiker</p>
+						<img data-src="201506_Unittesting/img/sc_mpv_tech_180.jpg" height="130px" alt="Technical MVP logo" />
+					</section>
+					<section data-background="201506_Unittesting/img/tahzoo_maps.png" data-background-transition="zoom">
+						<a href="http://www.tahzoo.com" target="_blank"><img data-src="201506_Unittesting/img/tahzoo.jpeg" height="300px" alt="Tahzoo logo" /></a>
+						<aside class="notes">Tahzoo is the largest independent <abbr title="Customer Experience">CX</abbr> agency delivering end-to-end digital transformation services and solutions globally.</aside>
+					</section>
+					<section data-background="201506_Unittesting/img/hinttech_maps.png" data-background-transition="zoom">
+					</section>
 				</section>
-				<section>
-					<section data-background="#008800">
+				<section data-background-transition="zoom">
+					<section data-background="#154a7e">
+						<h2>Unit testing</h2>
+					</section>
+					<section data-background="#008800" data-background-transition="zoom">
 						<h2>What to test?</h2>
 					</section>
 					<section data-background="#008800">
 						<img data-src="201506_Unittesting/img/220px-DD-Path.png" alt="Control flow diagram" />
 					</section>
-				</section>
-				<section>
-					<section data-background="#990000">
+					<section data-background="#990000" data-background-transition="zoom">
 						<h2>What *NOT* to test?</h2>
 					</section>
-				</section>
 
-				<section>
-					<section data-background="#008800">
+					<section data-background="#008800" data-background-transition="zoom">
 						<h2>How to test?</h2>
 					</section>
 					<section data-background="#008800">
@@ -74,12 +81,10 @@
 					</section>
 					<section data-background="#008800">
 						<h3>Interaction</h3>
-						<pre><code class="cs">providerMock.Verify(mock => mock.GetData(), Times.Once());</code></pre>		 
+						<pre><code class="cs">smtpServerMock.Verify(mock => mock.SendMail(), Times.Once());</code></pre>		 
 					</section>
-				</section>
-				
-				<section>
-					<section data-background="#990000">
+					
+					<section data-background="#990000" data-background-transition="zoom">
 						<h2>How *NOT* to test?</h2>
 					</section>
 					<section data-background="#990000">
@@ -91,10 +96,14 @@
 							<li>HttpContext</li>
 						</ul>
 					</section>
+					
+					<section data-background="#008800" data-background-transition="zoom">
+						<h2>Write testable code</h2>
+					</section>
 				</section>
 				<section>
 					<section>
-						<h2>Sitecore webdev projects</h2>
+						<h2>Unit testing challenges in Sitecore projects</h2>
 					</section>
 					<section>
 						<h3>Code has dependencies on</h3>
@@ -107,16 +116,63 @@
 								<li>Language</li>
 							</ul>
 						</ul>
+						<aside class="notes">Static classes zonder interface</aside>
 					</section>
-					<section data-background="#008800">
-						<p>Make one class responsible for calls to the Sitecore context.</p>
+					<section data-background="#008800" data-background-transition="zoom">
+						<h3>There can be only one</h3>
+						<p>class that directly uses the Sitecore.Context</p>
+					</section>
+					<section data-background="#008800" data-background-transition="zoom">
+						<h3>Wrap it up</h3>
+						<p>Create an adapter class for each static class</p>
+					</section>
+					<section>
+						<h3>See it in action:</h3>
+						<p>ItemAdapter</p>
+						<aside class="notes">
+							Demo:
+							ItemAdapter + Interface
+							Sitecore Item
+						</aside>
 					</section>
 				</section>
 				<section>
+					<section>
+						<h2>Unit testing with Sitecore.FakeDB</h2>
+					</section>
+					<section>
+						<blockquote cite="https://github.com/sergeyshushlyapin/Sitecore.FakeDb/wiki">"Sitecore FakeDb is the unit testing framework for Sitecore that enables creation and manipulation of Sitecore content in memory."</blockquote>
+						<p>
+							<small><a href="https://github.com/sergeyshushlyapin/Sitecore.FakeDb" target="_blank">github.com/sergeyshushlyapin/Sitecore.FakeDb</a></small>
+						</p>
+					</section>
+					<section>
+						<ul class="nobullets">
+							<li>+ NuGet package</li>
+							<li>+ No Sitecore DB required</li>
+							<li>+ No Sitecore config required</li>
+							<li>- License file is required</li>
+						</ul>
+					</section>
+					<section>
+						<h3>See it in action:</h3>
+						<p>Sitecore.FakeDb</p>	
+						<aside class="notes">
+							<p>Show that</p>
+							<ul>
+								<li>It is installed as a NuGet package in the Test project.</li>
+								<li>Show that it requires Sitecore and Lucene dlls and license</li>
+								<li>Show NCrunch setting for Test project that license file need to be added.</li>
+							</ul>
+
+						</aside>
+					</section>
+				</section>
+				<section data-background="#DDDDDD" data-background-transition="zoom">
 					<h2>Tools</h2>
-					<a href="http://www.ncrunch.net/" target="_blank"><img data-src="201506_Unittesting/img/N-logo.png" alt="NCrunch logo"/> </a>
+					<a href="http://www.ncrunch.net/" target="_blank"><img data-src="201506_Unittesting/img/N-logo.png" alt="NCrunch logo"/></a>
 				</section>
-				<section>
+				<section data-background="#DDDDDD" data-background-transition="zoom">
 					<h2>Resources</h2>
 					<ul>
 						<li></li>
@@ -125,7 +181,13 @@
 				<section>
 					<h2>Contact</h2>
 					<p>
-						<a href="https://twitter.com/@marcduiker">@marcduiker</a>
+						<a href="https://twitter.com/@marcduiker" target="_blank">@marcduiker</a>
+					</p>
+					<p>
+						<a href="mailto://marc.duiker@tahzoo.com" target="_blank">marc.duiker@tahzoo.com</a>
+					</p>
+					<p>
+						<a href="http://blog.marcduiker.nl" target="_blank">blog.marcduiker.nl</a>
 					</p>
 				</section>
 			</div>
