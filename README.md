@@ -1,2 +1,2 @@
 # Presentations
-Presentations for SUGNL
+Public presentations for SUGNL and Tahzoo. Presentations are made with reveal.js.
