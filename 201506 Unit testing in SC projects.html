@@ -13,7 +13,7 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-		<link rel="icon" type="image/ico" href="favicon.ico">
+		<link rel="icon" type="image/ico" href="favicon_tahzoo.ico">
 		<link rel="stylesheet" href="css/reveal.css">
 		<link rel="stylesheet" href="css/theme/tahzoo.css" id="theme">
 
@@ -40,7 +40,7 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 				<section>
-					<section data-background="#DDDDDD">
+					<section data-background="#154a7e">
 						<h1>Unit testing in Sitecore projects</h1>
 						<p>Marc Duiker</p>
 						<img data-src="201506_Unittesting/img/sc_mpv_tech_180.jpg" height="130px" alt="Technical MVP logo" />
@@ -51,41 +51,63 @@
 					</section>
 					<section data-background="201506_Unittesting/img/hinttech_maps.png" data-background-transition="zoom">
 					</section>
+					<section data-background="#444444" data-background-transition="zoom">
+						<p><a href="http://www.sugnl.net"><img data-src="201506_Unittesting/img/sugnl_logo_square.png" /></a></p>
+						<p><a href="http://www.sugnl.net/conference"><img data-src="201506_Unittesting/img/sugnl_banner_2015_transparent.png" width="50%" /></a></p>
+					</section>
+					<section data-background="201506_Unittesting/img/marcduikerphotography.png" data-background-transition="zoom">
+					</section>
+				</section>
+				<section>	
+					<img data-src="201506_Unittesting/img/trelloboard_agenda.png" alt="agenda" />
 				</section>
 				<section data-background-transition="zoom">
 					<section data-background="#154a7e">
 						<h2>Unit testing</h2>
 					</section>
 					<section data-background="#008800" data-background-transition="zoom">
-						<h2>What to test?</h2>
+						<h3>What to test?</h3>
 					</section>
 					<section data-background="#008800">
+						<h4>Control flow</h4>
 						<img data-src="201506_Unittesting/img/220px-DD-Path.png" alt="Control flow diagram" />
 					</section>
 					<section data-background="#990000" data-background-transition="zoom">
-						<h2>What *NOT* to test?</h2>
+						<h3>What *NOT* to test?</h3>
 					</section>
-
+					<section data-background="#990000">
+						<h3>Input parameters</h3>
+						<p>Use <a href="https://msdn.microsoft.com/en-us/library/dd264808(v=vs.110).aspx" target="_blank">Code Contracts</a> for those</p>
+						<pre><code data-trim class="cs">
+public void ProcessOrder(Order order)
+{
+	Contract.Require(order != null); 
+		
+	/* do stuff with order */
+	...
+}
+					</code></pre>
+					</section>
 					<section data-background="#008800" data-background-transition="zoom">
-						<h2>How to test?</h2>
-					</section>
-					<section data-background="#008800">
-						<h2>State</h2>
-						<p>vs</p>
-						<h2>Interaction</h2>
+						<h3>How to test?</h3>
 					</section>
 					<section data-background="#008800">
 						<h3>State</h3>
+						<p>vs</p>
+						<h3>Interaction</h3>
+					</section>
+					<section data-background="#008800">
+						<h4>State</h4>
 						<pre><code class="cs">Assert.AreEqual(0, index);</code></pre>
 						<pre><code class="cs">Assert.IsNotNull(collection);</code></pre>
 					</section>
 					<section data-background="#008800">
-						<h3>Interaction</h3>
+						<h4>Interaction</h4>
 						<pre><code class="cs">smtpServerMock.Verify(mock => mock.SendMail(), Times.Once());</code></pre>		 
 					</section>
 					
 					<section data-background="#990000" data-background-transition="zoom">
-						<h2>How *NOT* to test?</h2>
+						<h3>How *NOT* to test?</h3>
 					</section>
 					<section data-background="#990000">
 						<h3>External dependencies</h3>
@@ -96,9 +118,10 @@
 							<li>HttpContext</li>
 						</ul>
 					</section>
-					
-					<section data-background="#008800" data-background-transition="zoom">
-						<h2>Write testable code</h2>
+				</section>
+				<section data-background-transition="zoom">
+					<section data-background="#154a7e">
+						<h2>Testable code</h2>
 					</section>
 				</section>
 				<section>
@@ -206,7 +229,8 @@
 				history: true,
 				center: true,
 				mouseWheel: true,
-
+				width: 960,
+    			height: 700,
 				transition: 'slide', // none/fade/slide/convex/concave/zoom
 
 				// Optional reveal.js plugins
