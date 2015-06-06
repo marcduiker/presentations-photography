@@ -41,7 +41,7 @@
 			<div class="slides">
 				<section>
 					<section data-background="#154a7e">
-						<h1>Unit testing in Sitecore projects</h1>
+						<h1>Unit testing in .Net &amp; Sitecore projects</h1>
 						<p>Marc Duiker</p>
 						<img data-src="201506_Unittesting/img/sc_mpv_tech_180.jpg" height="130px" alt="Technical MVP logo" />
 					</section>
@@ -58,26 +58,95 @@
 					<section data-background="201506_Unittesting/img/marcduikerphotography.png" data-background-transition="zoom">
 					</section>
 				</section>
-				<section>	
+				
+				<section id="agenda">	
 					<img data-src="201506_Unittesting/img/trelloboard_agenda.png" alt="agenda" />
 				</section>
+					
 				<section data-background-transition="zoom">
 					<section data-background="#154a7e">
 						<h2>Unit testing</h2>
 					</section>
-					<section data-background="#008800" data-background-transition="zoom">
-						<h3>What to test?</h3>
+					<section data-background="#154a7e">
+						<h3>Agree on what to unit test</h3>
+						<p class="fragment">My do's and don'ts are...</p>
+						<aside class="notes"></aside>
 					</section>
-					<section data-background="#008800">
-						<h4>Control flow</h4>
+					<section data-background="#008800" data-background-transition="zoom">
+						<h4>1. Test all control flow paths</h4>
 						<img data-src="201506_Unittesting/img/220px-DD-Path.png" alt="Control flow diagram" />
 					</section>
-					<section data-background="#990000" data-background-transition="zoom">
-						<h3>What *NOT* to test?</h3>
+					<section data-background="#008800">
+						<h4>2. Test all forms of string, number and date parsing</h4>
+						<pre><code data-trim class="cs">
+public static DateTime StringToDate(string dateString)
+{
+    DateTime dateTime;
+    if (dateString.Length == 4)
+    {
+        dateTime = new DateTime(Convert.ToInt16(dateString.Substring(0, 4)), 1, 1, 0, 0, 0, 0);
+    }
+    else if (dateString.Length == 6)
+    {
+        dateTime = new DateTime(Convert.ToInt16(dateString.Substring(0, 4)), Convert.ToInt16(dateString.Substring(4, 2)), 1, 0, 0, 0, 0);
+    }
+    else if (dateString.Length == 8)
+    {
+        dateTime = new DateTime(Convert.ToInt16(dateString.Substring(0, 4)), Convert.ToInt16(dateString.Substring(4, 2)), Convert.ToInt16(dateString.Substring(6, 2)), 0, 0, 0, 0);
+    }
+    else if (dateString.Length == 10)
+    {
+        dateTime = new DateTime(Convert.ToInt16(dateString.Substring(0, 4)), Convert.ToInt16(dateString.Substring(4, 2)), Convert.ToInt16(dateString.Substring(6, 2)), Convert.ToInt16(dateString.Substring(8, 2)), 0, 0, 0);
+    }
+    else if (dateString.Length == 12)
+    {
+        dateTime = new DateTime(Convert.ToInt16(dateString.Substring(0, 4)), Convert.ToInt16(dateString.Substring(4, 2)), Convert.ToInt16(dateString.Substring(6, 2)), Convert.ToInt16(dateString.Substring(8, 2)), Convert.ToInt16(dateString.Substring(10, 2)), 0, 0);
+    }
+    else if (dateString.Length != 14)
+    {
+        if (dateString.Length != 17)
+        {
+            throw new FormatException(string.Concat("Input is not valid date string: ", dateString));
+        }
+        dateTime = new DateTime(Convert.ToInt16(dateString.Substring(0, 4)), Convert.ToInt16(dateString.Substring(4, 2)), Convert.ToInt16(dateString.Substring(6, 2)), Convert.ToInt16(dateString.Substring(8, 2)), Convert.ToInt16(dateString.Substring(10, 2)), Convert.ToInt16(dateString.Substring(12, 2)), Convert.ToInt16(dateString.Substring(14, 3)));
+    }
+    else
+    {
+        dateTime = new DateTime(Convert.ToInt16(dateString.Substring(0, 4)), Convert.ToInt16(dateString.Substring(4, 2)), Convert.ToInt16(dateString.Substring(6, 2)), Convert.ToInt16(dateString.Substring(8, 2)), Convert.ToInt16(dateString.Substring(10, 2)), Convert.ToInt16(dateString.Substring(12, 2)), 0);
+    }
+    return dateTime;
+}
+						</code></pre>
+						<p><small>Found in <a href="https://lucenenet.apache.org/docs/3.0.3/df/dd0/_date_tools_8cs_source.html" target="_blank">Lucene.Net.Documents.DateTools</a> namespace.</small></p>
 					</section>
-					<section data-background="#990000">
-						<h3>Input parameters</h3>
-						<p>Use <a href="https://msdn.microsoft.com/en-us/library/dd264808(v=vs.110).aspx" target="_blank">Code Contracts</a> for those</p>
+					<section data-background="#008800">
+						<h4>3. Test Regexes</h4>
+						<pre><code data-trim class="cs">
+public static bool IsValidEmailAddress(string email)
+{
+   const string pattern = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+             
+   return Regex.IsMatch(email, pattern, RegexOptions.IgnoreCase);
+}
+						</code></pre>
+					</section>
+					
+					<section data-background="#990000" data-background-transition="zoom">
+						<h4>4. Don't test input parameter validation*</h4>
+						<pre><code data-trim class="cs">
+public void ProcessOrder(Order order)
+{
+	if(order != null)
+	{	
+	   /* do stuff with order */
+	   ...
+	}
+}
+					</code></pre>
+					<p><small>*Try to avoid this type of coding, instead use...</small></p>
+					</section>
+					<section data-background="#008800" data-background-transition="zoom">
+						<h4>Code Contracts</h4>
 						<pre><code data-trim class="cs">
 public void ProcessOrder(Order order)
 {
@@ -87,30 +156,72 @@ public void ProcessOrder(Order order)
 	...
 }
 					</code></pre>
+					<p><small><a href="https://msdn.microsoft.com/en-us/library/dd264808(v=vs.110).aspx" target="_blank">MSDN documentation</a> | <a href="https://visualstudiogallery.msdn.microsoft.com/1ec7db13-3363-46c9-851f-1ce455f66970" target="_blank">Get the VS extension</a></small></p>
+					</section>
+					<section data-background="#154a7e" data-background-transition="zoom">
+						<h3>Writing</h3>
+						<h3>Readable, Maintainable & Trustworthy</h3> 
+						<h3>unit tests</h3>
+						<p class="fragment">Some tips...</p>
 					</section>
 					<section data-background="#008800" data-background-transition="zoom">
-						<h3>How to test?</h3>
+						<h4>1. Stick to the naming convention</h4>
+						<pre><code data-trim class="cs">
+[Test]
+public void UnitOfWork_StateUnderTest_ExpectedBehaviour()
+{
+    // Arrange
+    
+    // Act
+
+    // Assert
+
+}
+						</code></pre>
+					</section>
+					<section data-background="#008800" data-background-transition="zoom">
+						<pre><code data-trim class="cs">
+[Test]
+public void IsValidEmailAddress_ValidEmailString_ReturnsTrue()
+{
+    // Arrange
+    const string email = "first.last@company.com";
+
+    // Act
+    bool result = StringUtilities.IsValidEmailAddress(email);
+
+    // Assert
+    result.Should().BeTrue();
+}
+						</code></pre>
 					</section>
 					<section data-background="#008800">
-						<h3>State</h3>
+						<h3></h3>
+						<h3>2. State</h3>
 						<p>vs</p>
 						<h3>Interaction</h3>
 					</section>
 					<section data-background="#008800">
 						<h4>State</h4>
-						<pre><code class="cs">Assert.AreEqual(0, index);</code></pre>
-						<pre><code class="cs">Assert.IsNotNull(collection);</code></pre>
+						<p class="left">Classic xUnit style</p>
+						<pre><code data-trim class="cs">Assert.AreEqual(0, collectionIndex);</code></pre>
+						<pre><code data-trim class="cs">Assert.IsNotNull(collection);</code></pre>
+						<p class="left">Fluent Assertion style</p>
+						<pre><code class="cs">collection.Should().StartWith(element).And.OnlyHaveUniqueItems();</code></pre>
 					</section>
 					<section data-background="#008800">
 						<h4>Interaction</h4>
-						<pre><code class="cs">smtpServerMock.Verify(mock => mock.SendMail(), Times.Once());</code></pre>		 
+						<pre><code data-trim class="cs">
+// Assert
+messagingClient.Verify(mock => mock.SendMessage(It.IsAny&lt;string&gt;()));	
+							</code></pre>		 
 					</section>
-					
+					<section data-background="#008800">
+						<h3>3. Keep unit tests short &amp; <accr title="Don't Repeat Yourself">DRY</accr></h3>
+						<p>Move construction &amp; initialization of objects to helper methods or factories.</p>
+					</section>
 					<section data-background="#990000" data-background-transition="zoom">
-						<h3>How *NOT* to test?</h3>
-					</section>
-					<section data-background="#990000">
-						<h3>External dependencies</h3>
+						<h3>4. Unit tests should not have external dependencies</h3>
 						<ul>
 							<li>Database</li>
 							<li>Services</li>
@@ -119,14 +230,49 @@ public void ProcessOrder(Order order)
 						</ul>
 					</section>
 				</section>
+				
 				<section data-background-transition="zoom">
-					<section data-background="#154a7e">
+					<section>
 						<h2>Testable code</h2>
 					</section>
+					<section>
+						<h3>Dependency Inversion Principle</h3>
+						<blockquote cite="http://butunclebob.com/ArticleS.UncleBob.PrinciplesOfOod">Depend on abstractions, not on concretions.</blockquote>
+						<p><small><a href="http://butunclebob.com/ArticleS.UncleBob.PrinciplesOfOod" target="_blank">Principles Of OOD by Uncle Bob</a></small></p>
+					</section>
+					<section>
+						<h3>Interfaces &amp; Dependency Injection</h3>
+						<p>Inject interfaces through the constructor or properties.</p>
+						<aside class="notes">Use DI containers such as Unity, Autofac, StructureMap to resolve the interfaces.
+							<br/>
+							Unit test code does not require a DI container because a mocking framework will create instances. 
+						</aside>
+					</section>
+					<section>
+						<h3>Testability check</h3>
+						<ul>
+							<li>Are there any external dependencies?</li>
+							<ul>
+								<li>Logging</li>
+								<li>Caching</li>
+							</ul>
+							<li>Are you 'newing up' non domain objects?</li>
+							<li>Does the code depend on:</li>
+							<ul>
+								<li>DateTime.Now</li>
+								<li>Random</li>
+							</ul>
+						</ul>
+						<aside class="notes">
+							DateTimeNowUnitTestExample
+						</aside>
+					</section>
 				</section>
-				<section>
+				
+				<section  data-background-transition="zoom">
 					<section>
 						<h2>Unit testing challenges in Sitecore projects</h2>
+						
 					</section>
 					<section>
 						<h3>Code has dependencies on</h3>
@@ -194,6 +340,7 @@ public void ProcessOrder(Order order)
 				<section data-background="#DDDDDD" data-background-transition="zoom">
 					<h2>Tools</h2>
 					<a href="http://www.ncrunch.net/" target="_blank"><img data-src="201506_Unittesting/img/N-logo.png" alt="NCrunch logo"/></a>
+					<a href="https://github.com/Moq/moq4/wiki/Quickstart">Moq</a>
 				</section>
 				<section data-background="#DDDDDD" data-background-transition="zoom">
 					<h2>Resources</h2>
