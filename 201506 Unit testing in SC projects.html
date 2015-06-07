@@ -65,19 +65,20 @@
 					
 				<section data-background-transition="zoom">
 					<section data-background="#154a7e">
-						<h2>Unit testing</h2>
+						<h1>Unit testing</h1>
+						<aside class="notes">This presentation is aimed at people working on existing SW dev projects with little unit tests or experience. I will explain the basics of unit testing first before diving into Sitecore projects.</aside>
 					</section>
 					<section data-background="#154a7e">
-						<h3>Agree on what to unit test</h3>
+						<h2>Agree on what to unit test</h2>
 						<p class="fragment">My do's and don'ts are...</p>
 						<aside class="notes"></aside>
 					</section>
 					<section data-background="#008800" data-background-transition="zoom">
-						<h4>1. Test all control flow paths</h4>
+						<h3>1. Test all control flow paths</h3>
 						<img data-src="201506_Unittesting/img/220px-DD-Path.png" alt="Control flow diagram" />
 					</section>
 					<section data-background="#008800">
-						<h4>2. Test all forms of string, number and date parsing</h4>
+						<h3>2. Test all forms of string, number and date parsing</h3>
 						<pre><code data-trim class="cs">
 public static DateTime StringToDate(string dateString)
 {
@@ -120,7 +121,7 @@ public static DateTime StringToDate(string dateString)
 						<p><small>Found in <a href="https://lucenenet.apache.org/docs/3.0.3/df/dd0/_date_tools_8cs_source.html" target="_blank">Lucene.Net.Documents.DateTools</a> namespace.</small></p>
 					</section>
 					<section data-background="#008800">
-						<h4>3. Test Regexes</h4>
+						<h3>3. Test Regexes</h3>
 						<pre><code data-trim class="cs">
 public static bool IsValidEmailAddress(string email)
 {
@@ -132,7 +133,7 @@ public static bool IsValidEmailAddress(string email)
 					</section>
 					
 					<section data-background="#990000" data-background-transition="zoom">
-						<h4>4. Don't test input parameter validation*</h4>
+						<h3>4. Don't test input parameter validation*</h3>
 						<pre><code data-trim class="cs">
 public void ProcessOrder(Order order)
 {
@@ -159,13 +160,15 @@ public void ProcessOrder(Order order)
 					<p><small><a href="https://msdn.microsoft.com/en-us/library/dd264808(v=vs.110).aspx" target="_blank">MSDN documentation</a> | <a href="https://visualstudiogallery.msdn.microsoft.com/1ec7db13-3363-46c9-851f-1ce455f66970" target="_blank">Get the VS extension</a></small></p>
 					</section>
 					<section data-background="#154a7e" data-background-transition="zoom">
-						<h3>Writing</h3>
-						<h3>Readable, Maintainable & Trustworthy</h3> 
-						<h3>unit tests</h3>
+						<h2>Writing Readable, Maintainable & Trustworthy Unit Tests</h2>
 						<p class="fragment">Some tips...</p>
 					</section>
 					<section data-background="#008800" data-background-transition="zoom">
-						<h4>1. Stick to the naming convention</h4>
+						<h3>1. Clear solution structure</h3>
+						<img data-src="201506_Unittesting/img/solutionstructure.png" alt="VS solution structure" />
+					</section>
+					<section data-background="#008800">
+						<h3>2. Stick to the naming convention</h3>
 						<pre><code data-trim class="cs">
 [Test]
 public void UnitOfWork_StateUnderTest_ExpectedBehaviour()
@@ -196,8 +199,7 @@ public void IsValidEmailAddress_ValidEmailString_ReturnsTrue()
 						</code></pre>
 					</section>
 					<section data-background="#008800">
-						<h3></h3>
-						<h3>2. State</h3>
+						<h3>3. State</h3>
 						<p>vs</p>
 						<h3>Interaction</h3>
 					</section>
@@ -207,6 +209,7 @@ public void IsValidEmailAddress_ValidEmailString_ReturnsTrue()
 						<pre><code data-trim class="cs">Assert.AreEqual(0, collectionIndex);</code></pre>
 						<pre><code data-trim class="cs">Assert.IsNotNull(collection);</code></pre>
 						<p class="left">Fluent Assertion style</p>
+						<pre><code class="cs">collection.Should().NotBeNull();</code></pre>
 						<pre><code class="cs">collection.Should().StartWith(element).And.OnlyHaveUniqueItems();</code></pre>
 					</section>
 					<section data-background="#008800">
@@ -214,14 +217,15 @@ public void IsValidEmailAddress_ValidEmailString_ReturnsTrue()
 						<pre><code data-trim class="cs">
 // Assert
 messagingClient.Verify(mock => mock.SendMessage(It.IsAny&lt;string&gt;()));	
-							</code></pre>		 
+							</code></pre>
+						<aside class="notes">See InteractionUnitTestExamples</aside>	 
 					</section>
 					<section data-background="#008800">
-						<h3>3. Keep unit tests short &amp; <accr title="Don't Repeat Yourself">DRY</accr></h3>
+						<h3>4. Keep unit tests short &amp; <accr title="Don't Repeat Yourself">DRY</accr></h3>
 						<p>Move construction &amp; initialization of objects to helper methods or factories.</p>
 					</section>
 					<section data-background="#990000" data-background-transition="zoom">
-						<h3>4. Unit tests should not have external dependencies</h3>
+						<h3>5. Unit tests should not have external dependencies</h3>
 						<ul>
 							<li>Database</li>
 							<li>Services</li>
@@ -233,15 +237,15 @@ messagingClient.Verify(mock => mock.SendMessage(It.IsAny&lt;string&gt;()));
 				
 				<section data-background-transition="zoom">
 					<section>
-						<h2>Testable code</h2>
+						<h1>Testable code</h1>
 					</section>
 					<section>
-						<h3>Dependency Inversion Principle</h3>
+						<h2>Dependency Inversion Principle</h2>
 						<blockquote cite="http://butunclebob.com/ArticleS.UncleBob.PrinciplesOfOod">Depend on abstractions, not on concretions.</blockquote>
 						<p><small><a href="http://butunclebob.com/ArticleS.UncleBob.PrinciplesOfOod" target="_blank">Principles Of OOD by Uncle Bob</a></small></p>
 					</section>
 					<section>
-						<h3>Interfaces &amp; Dependency Injection</h3>
+						<h2>Interfaces &amp; Dependency Injection</h2>
 						<p>Inject interfaces through the constructor or properties.</p>
 						<aside class="notes">Use DI containers such as Unity, Autofac, StructureMap to resolve the interfaces.
 							<br/>
@@ -249,7 +253,7 @@ messagingClient.Verify(mock => mock.SendMessage(It.IsAny&lt;string&gt;()));
 						</aside>
 					</section>
 					<section>
-						<h3>Testability check</h3>
+						<h2>Testability check</h2>
 						<ul>
 							<li>Are there any external dependencies?</li>
 							<ul>
@@ -269,13 +273,19 @@ messagingClient.Verify(mock => mock.SendMessage(It.IsAny&lt;string&gt;()));
 					</section>
 				</section>
 				
-				<section  data-background-transition="zoom">
-					<section>
-						<h2>Unit testing challenges in Sitecore projects</h2>
-						
+				
+				<section data-background-transition="zoom">
+					<section id="sitecore">
+						<h1>Unit testing challenges in Sitecore projects</h1>
 					</section>
 					<section>
-						<h3>Code has dependencies on</h3>
+						<h2>Sitecore framework is an ASP.Net web application</h2>
+						<p>Requires loads of config files</p>
+						<p>Stores everything in databases</p>
+						<aside class="notes">Static classes zonder interface</aside>
+					</section>
+					<section>
+						<h2>Code depends on</h2>
 						<ul>
 							<li>Sitecore.Context</li>
 							<ul>
@@ -285,34 +295,44 @@ messagingClient.Verify(mock => mock.SendMessage(It.IsAny&lt;string&gt;()));
 								<li>Language</li>
 							</ul>
 						</ul>
-						<aside class="notes">Static classes zonder interface</aside>
+						
+						<p>All static classes :(</p>
 					</section>
 					<section data-background="#008800" data-background-transition="zoom">
-						<h3>There can be only one</h3>
-						<p>class that directly uses the Sitecore.Context</p>
-					</section>
-					<section data-background="#008800" data-background-transition="zoom">
-						<h3>Wrap it up</h3>
-						<p>Create an adapter class for each static class</p>
-					</section>
-					<section>
-						<h3>See it in action:</h3>
-						<p>ItemAdapter</p>
+						<h2>Wrap the static classes</h2>
+						<ul>
+							<li>Define an interface for the static class</li>
+							<li>Implement the interface using an adapter class</li>
+							<li>Program against the interface</li>
+						</ul>
 						<aside class="notes">
-							Demo:
-							ItemAdapter + Interface
-							Sitecore Item
+							<ul>
+								<li>Sitecore Item has many properties and methods.</li>
+								<li>You control what goes in the interface.</li>
+							</ul>
 						</aside>
 					</section>
-				</section>
-				<section>
 					<section>
+						<h3>See it in action</h3>
+						<p>IItem &amp; ItemAdapter</p>
+						<aside class="notes">
+							<ul>
+								<li>IItem + ItemAdapter</li>
+								<li>ItemHelperWithContext</li>
+								<li>ItemHelperWithServiceLocator</li>
+								<li>ItemProvider</li>
+								<li>NewsProvider</li>
+							</ul>
+						</aside>
+					</section>
+					<section id="fakedb">
 						<h2>Unit testing with Sitecore.FakeDB</h2>
 					</section>
 					<section>
 						<blockquote cite="https://github.com/sergeyshushlyapin/Sitecore.FakeDb/wiki">"Sitecore FakeDb is the unit testing framework for Sitecore that enables creation and manipulation of Sitecore content in memory."</blockquote>
 						<p>
 							<small><a href="https://github.com/sergeyshushlyapin/Sitecore.FakeDb" target="_blank">github.com/sergeyshushlyapin/Sitecore.FakeDb</a></small>
+							<small><a href="https://www.youtube.com/watch?v=9IgKrI3Y_Z0" target="_blank">Sitecore Virtual User Group video on Sitecore.FakeDB</a></small>
 						</p>
 					</section>
 					<section>
@@ -324,32 +344,62 @@ messagingClient.Verify(mock => mock.SendMessage(It.IsAny&lt;string&gt;()));
 						</ul>
 					</section>
 					<section>
-						<h3>See it in action:</h3>
+						<h3>See it in action</h3>
 						<p>Sitecore.FakeDb</p>	
 						<aside class="notes">
 							<p>Show that</p>
 							<ul>
 								<li>It is installed as a NuGet package in the Test project.</li>
+								<li>It has a separate configuration per project.</li>
 								<li>Show that it requires Sitecore and Lucene dlls and license</li>
 								<li>Show NCrunch setting for Test project that license file need to be added.</li>
+								<li>ItemProvider</li>
+								<li>NewsProviderWithContext</li>
 							</ul>
-
 						</aside>
 					</section>
+					<section>
+						<h2>Sitecore.Fake.DB with real data</h2>
+					</section>
+					<section>
+						<h3>Integration testing</h3>
+						<ul>
+							<li>Serialize items from Sitecore to disk</li>
+							<li>Configure FakeDB to point to the files on disk</li>
+							<li>Use DsDbItem and DsDbTemplate in the tests</li>
+						</ul>
+						<p><small><a href="https://github.com/sergeyshushlyapin/Sitecore.FakeDb/wiki/FakeDb-Serialization">FakeDb Wiki</a></small></p>
+					</section>
 				</section>
-				<section data-background="#DDDDDD" data-background-transition="zoom">
-					<h2>Tools</h2>
+				
+				<section id="tools" data-background="#DDDDDD" data-background-transition="zoom">
+					<h1>Tools</h1>
 					<a href="http://www.ncrunch.net/" target="_blank"><img data-src="201506_Unittesting/img/N-logo.png" alt="NCrunch logo"/></a>
-					<a href="https://github.com/Moq/moq4/wiki/Quickstart">Moq</a>
 				</section>
-				<section data-background="#DDDDDD" data-background-transition="zoom">
-					<h2>Resources</h2>
-					<ul>
-						<li></li>
-					</ul>
-				</section>
+				
 				<section>
-					<h2>Contact</h2>
+					<section id="resources" data-background="201506_Unittesting/img/books.jpg" data-background-transition="zoom">
+						<h1 class="dark">Resources</h1>
+					</section>
+					<section>
+							<figure>
+								<a href="http://www.manning.com/osherove/" target="_blank"">
+									<img data-src="201506_Unittesting/img/theartofunitesting.jpg" alt="The art of uit testing" />
+								</a>
+								<figcaption>The art of unit testing - Roy Osherove</figcaption>
+							</figure>
+					</section>
+					<section>
+							<figure>
+								<a href="http://www.manning.com/seemann/" target="_blank"">
+									<img data-src="201506_Unittesting/img/dependencyinjection.jpg" alt="Dependency injection in .Net" />
+								</a>
+								<figcaption>Dependency injection in .Net - Mark Seemann</figcaption>
+							</figure>
+					</section>
+				</section>
+				<section id="contact">
+					<h1>Contact</h1>
 					<p>
 						<a href="https://twitter.com/@marcduiker" target="_blank">@marcduiker</a>
 					</p>
