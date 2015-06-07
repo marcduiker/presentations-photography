@@ -72,6 +72,7 @@ body {
 
 .reveal .dark {
   background: rgba(22, 4, 5, 0.8); /*background: rgba(22, 4, 5, 0.8);*/
+  margin: 0 150px 0 150px;
   padding: 50px;
 }
 
