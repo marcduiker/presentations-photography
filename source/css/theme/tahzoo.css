@@ -39,17 +39,17 @@ body {
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: normal;
-  text-transform: uppercase;
+  text-transform: none;
   text-shadow: none;
   word-wrap: break-word; }
 
 .reveal h1 {
-  font-size: 2.5em; 
+  font-size: 2.3em; 
   text-shadow: 4px 2px #666;
 }
 
 .reveal h2 {
-  font-size: 1.6em; 
+  font-size: 1.8em; 
   text-shadow: 4px 2px #666;
 }
 
@@ -201,7 +201,7 @@ body {
  *********************************************/
 .reveal a {
   color: #FFF; /*E9292F*/
-  text-decoration: underline;
+  text-decoration: none;
   -webkit-transition: color 0.15s ease;
   -moz-transition: color 0.15s ease;
   transition: color 0.15s ease;  }
